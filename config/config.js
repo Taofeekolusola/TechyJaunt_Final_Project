@@ -1,4 +1,7 @@
-require('dotenv').config();
+const dotenv = require('dotenv');
+
+//loads the environmental variables from the .env file
+dotenv.config();
 
 config = {
   development: {
@@ -7,9 +10,8 @@ config = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    dialect: 'postgres'
+    dialect: 'postgres',
   },
   jwtSecret: process.env.JWT_SECRET_KEY,
 }
-
 module.exports = config;
