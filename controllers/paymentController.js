@@ -1,6 +1,7 @@
 const { Property } = require('../models/Property');
 const { Payment } = require('../models/Payment')
-const { User } = require('../models/User')
+const { Tenant } = require('../models/Tenant')
+
 
 const makePayment = async (req, res) => {
   try {
@@ -18,7 +19,7 @@ const makePayment = async (req, res) => {
     }
 
     // Find the tenant to ensure they exist
-    const tenant = await User.findOne({ where: { id: tenantId } });
+    const tenant = await Tenant.findOne({ where: { id: tenantId } });
     if (!tenant) {
       return res.status(404).json({ error: 'Tenant not found' });
     }

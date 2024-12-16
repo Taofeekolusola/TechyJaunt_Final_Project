@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { uploadProperty, searchProperties} = require('../controllers/propertysController')
+const { uploadProperty, searchProperties, getPropertyDetails} = require('../controllers/propertysController')
 const { validation } = require('../middleware/auth')
-const { validateSearch, validateProperty } = require("../middleware/validations");
 
-router.post('/upload', validation, validateProperty, uploadProperty)
-router.get('/search', validateSearch, searchProperties)
+router.post('/upload', validation, uploadProperty)
+router.get('/search', validation, searchProperties)
+router.get('/details/:propertyId', validation, getPropertyDetails)
 
 module.exports = router
