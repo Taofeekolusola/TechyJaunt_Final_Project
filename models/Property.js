@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const Property = sequelize.define("Property", {
+const Property = sequelize.define("Properties", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -29,13 +29,13 @@ const Property = sequelize.define("Property", {
   landlordId: {
     type: DataTypes.UUID,
     allowNull: false,
-    references: { model: "Landlord", key: "id" },
+    references: { model: "Users", key: "id" },
   },
 });
 
 // Define associations
 Property.associate = (models) => {
-  Property.belongsTo(models.Landlord, { foreignKey: "landlordId", as: "landlord" });
+  Property.belongsTo(models.User, { foreignKey: "landlordId", as: "Users" });
 };
 
 module.exports = { Property };

@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-  const User = sequelize.define("User", {
+  const User = sequelize.define("Users", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -26,11 +26,12 @@ const sequelize = require('../db');
     },
     confirmPassword: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
-      role: {
-          type: DataTypes.ENUM("tenant", "landlord"),
-          allowNull: false
+    role: {
+      type: DataTypes.ENUM("landlord", "tenant"),
+      allowNull: false,
+      defaultValue: "landlord",
     },
   });
   module.exports = { User };

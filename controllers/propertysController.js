@@ -1,6 +1,5 @@
 const { Property } = require("../models/Property");
 const { Op } = require("sequelize");
-const { Landlord } = require("../models/Landlord");
 
 const uploadProperty = async (req, res) => {
   try {

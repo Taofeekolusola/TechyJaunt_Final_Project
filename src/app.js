@@ -2,7 +2,6 @@ const express = require('express');
 const usersRoutes = require('../routes/usersRoute');
 const propertyRoutes = require('../routes/propertyRoute');
 const paymentRoutes = require('../routes/paymentRoute');
-const landlordRoutes = require('../routes/landlordRoute');
 const cors = require('cors')
 
 
@@ -20,9 +19,8 @@ const corsOptions = {
   app.use(cors(corsOptions));
 
 // Use the auth routes
-app.use('/auth', usersRoutes);
+app.use('/user', usersRoutes);
 app.use('/api', propertyRoutes);
 app.use('/payment', paymentRoutes);
-app.use('/landlord', landlordRoutes);
 
 module.exports = app;

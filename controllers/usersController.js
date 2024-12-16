@@ -1,35 +1,55 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { User } = require('../models/User');
-const { Tenant } = require('../models/Tenant');
-const { Landlord } = require('../models/Landlord');
 
 const signup = async (req, res) => {
   try {
-    const { firstname, email, password, lastname, cornfirmPassword, role, tenantDetails, landlordDetails } = req.body;
+    const { firstname, lastname, email, password, confirmPassword } = req.body;
+
+    // Validate password confirmation
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    // Create the User
-    const user = await User.create({ firstname, email, password: hashedPassword, lastname, cornfirmPassword, role });
 
-    if (role === "tenant") {
-      // Create Tenant details
-      const tenant = await Tenant.create({
-        ...tenantDetails,
-        userId: user.id, // Link to User
-      });
-      return res.status(201).json({ user, tenant });
+    // Create the user
+    const user = await User.create({
+      firstname,
+      lastname,
+      email,
+      password: hashedPassword,
+    });
+
+    return res.status(201).json({ message: "User created successfully", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred", error: error.message });
+  }
+};
+
+const assignRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    // Validate the role
+    if (!["landlord", "tenant"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role provided. Role must be 'landlord' or 'tenant'." });
     }
 
-    if (role === "landlord") {
-      // Create Landlord details
-      const landlord = await Landlord.create({
-        ...landlordDetails,
-        userId: user.id, // Link to User
-      });
-      return res.status(201).json({ user, landlord });
+    // Find the user
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(400).json({ message: "Invalid role provided" });
+    // Update the user's role
+    await user.update({ role });
+
+    return res.status(200).json({ message: "Role assigned successfully", user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred", error: error.message });
@@ -173,5 +193,6 @@ module.exports = {
     deleteUser,
     getAllUsers,
     getUserById,
-    getUserDetails,
+  getUserDetails,
+    assignRole,
 };

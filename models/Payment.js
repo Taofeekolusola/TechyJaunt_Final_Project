@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-    const Payment = sequelize.define("Payment", {
+    const Payment = sequelize.define("Payments", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -10,12 +10,12 @@ const sequelize = require('../db');
       tenantId: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: { model: "User", key: "id" },
+        references: { model: "Users", key: "id" },
       },
       propertyId: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: { model: "Property", key: "id" },
+        references: { model: "Properties", key: "id" },
       },
       amount: {
         type: DataTypes.DECIMAL,
@@ -32,8 +32,8 @@ const sequelize = require('../db');
     });
   
     Payment.associate = (models) => {
-      Payment.belongsTo(models.User, { foreignKey: "tenantId", as: "tenant" });
-      Payment.belongsTo(models.Property, { foreignKey: "propertyId", as: "property" });
+      Payment.belongsTo(models.User, { foreignKey: "tenantId", as: "tenants" });
+      Payment.belongsTo(models.Property, { foreignKey: "propertyId", as: "properties" });
     };
   
     module.exports = { Payment };
