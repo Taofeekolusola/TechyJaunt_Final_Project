@@ -41,6 +41,6 @@ const Landlord = sequelize.define("Landlord", {
 // Define associations
 Landlord.associate = (models) => {
   Landlord.hasMany(models.Property, { foreignKey: "propertyId", as: "properties" });
-  Landlord.hasMany(models.User, { foreignKey: "landlordId", as: "user" });
+  Landlord.hasMany(models.User, { foreignKey: "userId", as: "user" });
 };
 module.exports = { Landlord };

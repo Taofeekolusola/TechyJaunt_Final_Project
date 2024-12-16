@@ -42,7 +42,7 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false,
       },
-      references: {
+      userId: {
         type: Sequelize.UUID,
         userId: {
           model: 'User',
