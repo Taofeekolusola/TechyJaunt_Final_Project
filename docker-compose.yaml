@@ -1,0 +1,17 @@
+services:
+  generalsql-db:
+    image: postgres
+    container_name: techtjaunt-Db
+    ports:
+      - "5440:5432"
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=techyjauntdb
+
+volumes:
+  postgres_data:
+    driver: local
