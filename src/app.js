@@ -1,7 +1,6 @@
 const express = require('express');
-const authRoutes = require('../routes/authRoutes');
-const userRoutes = require('../routes/userRoutes');
-const propertyRoutes = require('../routes/propertyRoutes');
+const usersRoutes = require('../routes/usersRoute');
+const propertyRoutes = require('../routes/propertyRoute');
 
 const app = express();
 
@@ -10,8 +9,7 @@ app.use(express.json());
 app.use(propertyRoutes); // Register routes
 
 // Use the auth routes
-app.use('/auth', authRoutes);
-app.use('/api', userRoutes);
+app.use('/auth', usersRoutes);
 app.use('/api', propertyRoutes);
 
 module.exports = app;

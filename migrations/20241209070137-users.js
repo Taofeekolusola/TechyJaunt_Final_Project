@@ -1,56 +1,53 @@
 'use strict';
-
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Properties', {
+    await queryInterface.createTable('User', {
       id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
       },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-      },
-      title: {
+      firstname: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      address: {
+      lastname: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      contact: {
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      password: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      price: {
-        type: Sequelize.FLOAT,
+      confirmPassword: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: Sequelize.ENUM('tenant', 'landlord'),
         allowNull: false,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
       },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Properties');
+    await queryInterface.dropTable('User');
   },
 };
