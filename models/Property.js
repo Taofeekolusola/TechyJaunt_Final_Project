@@ -17,11 +17,11 @@ const Property = sequelize.define("Properties", {
   },
   price: {
     type: DataTypes.DECIMAL,
-    allowNull: false,
+    allowNull: false
   },
   location: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: false
   },
   imageUrl: {
     type: DataTypes.STRING,
@@ -32,10 +32,5 @@ const Property = sequelize.define("Properties", {
     references: { model: "Users", key: "id" },
   },
 });
-
-// Define associations
-Property.associate = (models) => {
-  Property.belongsTo(models.User, { foreignKey: "landlordId", as: "Users" });
-};
 
 module.exports = { Property };

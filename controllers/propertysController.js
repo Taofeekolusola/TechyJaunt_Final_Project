@@ -1,18 +1,20 @@
-const { Property } = require("../models/Property");
 const { Op } = require("sequelize");
+const { User, Property } = require("../models/index")
 
 const uploadProperty = async (req, res) => {
   try {
     // Extract landlord ID from the authenticated user
     const landlordId = req.user.id;
-    const { type, location, phoneNumber,  } = req.body;
+    const { location, imageUrl, title, description, price } = req.body;
 
     // Create a new property
     const property = await Property.create({
-      type,
       location,
-      phoneNumber,
-      landlordId,
+      imageUrl,
+      title,
+      description,
+      price,
+      landlordId
     });
 
     res.status(201).json({
@@ -26,46 +28,33 @@ const uploadProperty = async (req, res) => {
 };
 
 const searchProperties = async (req, res) => {
-  try {
-    const { minPrice, maxPrice, location, limit = 10, offset = 0 } = req.query;
+    try {
+      const { location } = req.query;
 
-    // Build the query filters dynamically
-    const filters = {};
-    if (minPrice) filters.price = { [Op.gte]: parseFloat(minPrice) };
-    if (maxPrice) filters.price = { ...filters.price, [Op.lte]: parseFloat(maxPrice) };
-    if (location) filters.location = { [Op.iLike]: `%${location}%` }; 
-    
-    // Fetch filtered properties with pagination
-    const { rows: properties, count: total } = await Property.findAndCountAll({
-      where: filters,
-      limit: parseInt(limit),
-      offset: parseInt(offset),
-      attributes: ["id", "title", "description", "price", "location", "contactDetails"],
-    });
+      const whereClause = {};
+      if (location) whereClause.location = { [Op.iLike]: `%${location}%` };
 
-    res.status(200).json({
-      properties,
-      total,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
+      const properties = await Property.findAll({ where: whereClause });
+      res.json(properties);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
 };
+
 
 const getPropertyDetails = async (req, res) => {
   try {
     const { propertyId } = req.params;
 
-    // Find the property with associated landlord details
+    // Find the property with associated landlord details (User)
     const property = await Property.findOne({
       where: { id: propertyId },
       attributes: ["id", "title", "description", "price", "location", "imageUrl"],
       include: [
         {
-          model: Landlord,
-          attributes: ["name", "contactDetails"],
-          as: "landlord",
+          model: User,
+          as: "landlord", // Ensure this matches the alias in your association
+          attributes: ["firstname", "lastname", "email"],
         },
       ],
     });
@@ -77,7 +66,9 @@ const getPropertyDetails = async (req, res) => {
     res.status(200).json({ property });
   } catch (error) {
     console.error("Error fetching property details:", error);
-    res.status(500).json({ error: "An error occurred while retrieving property details" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while retrieving property details" });
   }
 };
 

@@ -1,5 +1,4 @@
-const { Property } = require('../models/Property');
-const { Payment } = require('../models/Payment')
+const { Property, Payment } = require('../models/index');
 
 
 const makePayment = async (req, res) => {
