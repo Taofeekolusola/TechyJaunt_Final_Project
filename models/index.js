@@ -2,9 +2,9 @@ const { Sequelize } = require("sequelize");
 const sequelize = require("../db");
 
 // Import models
-const { User } = require("./User"); // Destructure User from the exported object
-const { Property } = require("./Property"); // Destructure Property
-const { Payment } = require("./Payment"); // Destructure Payment
+const { User } = require("./User");
+const { Property } = require("./Property");
+const { Payment } = require("./Payment");
 
 // Define associations
 User.hasMany(Property, { foreignKey: "landlordId", as: "properties" });
