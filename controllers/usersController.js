@@ -11,6 +11,33 @@ const signup = async (req, res) => {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
+    // Ensures name is provided and that it's a string
+    if (!firstname || typeof firstname !== 'string') { 
+      return res.status(400).json({
+        message: 'Invalid name. Name is required and it must be a string.'
+      });
+    }
+
+    // Ensures name is provided and that it's a string
+    if (!lastname || typeof lastname !== 'string') { 
+      return res.status(400).json({
+        message: 'Invalid name. Name is required and it must be a string.'
+      });
+    }
+    // Ensures email is provided ad that it's a string and contains '@'
+    if (!email || typeof email!== 'string' ||!email.includes('@')) { 
+      return res.status(400).json({
+        message: 'Invalid email. Email is required and it must be a valid email address.'
+      });
+    }
+
+    // Ensures password is provided ad that it's a string and at least 8 characters long
+    if (!password || typeof password!== 'string' || password.length < 8) { 
+      return res.status(400).json({
+        message: 'Invalid password. Password is required and it must be at least 8 characters long.'
+      });
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -83,9 +110,28 @@ const login = async (req, res) => {
   
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { username, email } = req.body;
+  const { firstname, lastname, email, password, confirmPassword } = req.body;
 
   try {
+
+    if (!firstname || typeof firstname !== 'string') { 
+      return res.status(400).json({
+        message: 'Invalid name. firstname is required and it must be a string.'
+      });
+    }
+    
+    if (!lastname || typeof lastname !== 'string') { 
+      return res.status(400).json({
+        message: 'Invalid name. lastname is required and it must be a string.'
+      });
+    }
+    // Ensures email is provided ad that it's a string and contains '@'
+    if (!email || typeof email!== 'string' ||!email.includes('@')) { 
+      return res.status(400).json({
+        message: 'Invalid email. Email is required and it must be a valid email address.'
+      });
+    }
+
     const user = await User.findByPk(id);
 
     if (!user) {
@@ -93,12 +139,23 @@ const updateUser = async (req, res) => {
     }
 
     // Update user with provided data
-    if (username) user.username = username;
+    if (firstname) user.firstname = firstname;
+    if (lastname) user.lastname = lastname;
     if (email) user.email = email;
 
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
     await user.save();
 
-    res.status(200).json({ message: 'User updated successfully', user });
+    res.status(200).json({
+      id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      confirmPassword: user.password
+    });
   } catch (error) {
     console.error('Error updating user:', error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -193,6 +250,6 @@ module.exports = {
     deleteUser,
     getAllUsers,
     getUserById,
-  getUserDetails,
+    getUserDetails,
     assignRole,
 };

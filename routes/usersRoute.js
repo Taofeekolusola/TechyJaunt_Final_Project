@@ -1,14 +1,15 @@
 const express = require('express')
 const router = express.Router()
-const { signup, login, updateUser, deleteUser, getAllUsers, getUserById, getUserDetails } = require('../controllers/usersController')
+const { signup, login, updateUser, deleteUser, getAllUsers, getUserById, getUserDetails, assignRole } = require('../controllers/usersController')
 const { validation } = require('../middleware/auth')
 
-router.post('/upload', login)
+router.post('/login', login)
 router.post('/signup', signup)
 router.put('/update/:id', validation, updateUser)
-router.delete('/delete/:id', deleteUser)
-router.get('/all', getAllUsers)
-router.get('/user/:id', validation, getUserById)
+router.delete('/delete/:id', validation, deleteUser)
+router.get('/all', validation, getAllUsers)
+router.get('/:id', validation, getUserById)
 router.get('/details/:userId', validation, getUserDetails)
+router.put('/role/:id', validation, assignRole)
 
 module.exports = router

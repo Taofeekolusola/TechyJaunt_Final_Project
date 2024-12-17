@@ -5,7 +5,7 @@ const uploadProperty = async (req, res) => {
   try {
     // Extract landlord ID from the authenticated user
     const landlordId = req.user.id;
-    const { type, location, phoneNumber } = req.body;
+    const { type, location, phoneNumber,  } = req.body;
 
     // Create a new property
     const property = await Property.create({
