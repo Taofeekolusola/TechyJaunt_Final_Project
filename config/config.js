@@ -1,9 +1,6 @@
-const dotenv = require('dotenv');
+require('dotenv').config();
 
-//loads the environmental variables from the .env file
-dotenv.config();
-
-config = {
+const config = {
   development: {
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -11,7 +8,14 @@ config = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'postgres',
+    dialectOptions: {
+      ssl: {
+        require: true, // Require SSL/TLS
+        rejectUnauthorized: false, // Accept self-signed certificates
+      },
+    },
   },
   jwtSecret: process.env.JWT_SECRET_KEY,
-}
+};
+
 module.exports = config;
